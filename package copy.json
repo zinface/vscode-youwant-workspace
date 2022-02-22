@@ -1,0 +1,121 @@
+{
+	"name": "ConvYouWant",
+	"publisher": "zinface",
+	"displayName": "YouWantWorkSpace",
+	"description": "Initialize your workspace to the type you want",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.22.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:init-workspace.cmake-c",
+		"onCommand:init-workspace.cmake-cpp",
+		"onCommand:init-workspace.cmake-qt-cli",
+		"onCommand:init-workspace.cmake-qt-gui",
+		"onCommand:init-workspace.vscode-extension",
+		"onCommand:runAnything"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"configuration":[
+			{
+				"title": "ConvYouWant Samples",
+				"properties": {
+					
+				}
+			}
+		],
+		"commands": [
+			{
+				"command": "init-workspace.cmake-c",
+				"title": "初始化工作空间为 cmake-c",
+				"category": "ConvWorkSpace"
+			},
+			{
+				"command": "init-workspace.cmake-cpp",
+				"title": "初始化工作空间为 cmake-cpp",
+				"category": "ConvWorkSpace"
+			},
+			{
+				"command": "init-workspace.cmake-qt-cli",
+				"title": "初始化工作空间为 cmake-qt-cli",
+				"category": "ConvWorkSpace"
+			},
+			{
+				"command": "init-workspace.cmake-qt-gui",
+				"title": "初始化工作空间为 cmake-qt-gui",
+				"category": "ConvWorkSpace"
+			},
+			{
+				"command": "init-workspace.vscode-extension",
+				"title": "初始化工作空间为 vscode extenstion",
+				"category": "ConvWorkSpace"
+			},
+			{
+				"command": "runAnything",
+				"title": "运行你想要运行的",
+				"category": "runAnything"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "init-workspace.cmake-c",
+					"group": "ConvWorkSpace",
+					"when": "explorerResourceIsRoot"
+				},
+				{
+					"command": "init-workspace.cmake-cpp",
+					"group": "ConvWorkSpace",
+					"when": "explorerResourceIsRoot"
+				},{
+					"command": "init-workspace.cmake-qt-cli",
+					"group": "ConvWorkSpace",
+					"when": "explorerResourceIsRoot"
+				},
+				{
+					"command": "init-workspace.cmake-qt-gui",
+					"group": "ConvWorkSpace",
+					"when": "explorerResourceIsRoot"
+				},
+				{
+					"command": "init-workspace.vscode-extension",
+					"group": "ConvWorkSpace",
+					"when": "explorerResourceIsRoot"
+				}
+			]
+		}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zinface/vscode-init-workspace.git"
+	},
+	"author": {
+		"name": "zinface",
+		"email": "zinfacex@gmail.com"
+	},
+	"license": "",
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.4",
+		"@types/mocha": "^9.0.0",
+		"@types/node": "14.x",
+		"@typescript-eslint/eslint-plugin": "^5.1.0",
+		"@typescript-eslint/parser": "^5.1.0",
+		"eslint": "^8.1.0",
+		"glob": "^7.1.7",
+		"mocha": "^9.1.3",
+		"typescript": "^4.4.4",
+		"@vscode/test-electron": "^1.6.2"
+	}
+}

@@ -1,0 +1,6 @@
+{
+	"init-workspace.cmake-c.title": "初始化工作空间为 cmake-c",
+	"init-workspace.cmake-cpp.title": "初始化工作空间为 cmake-cpp",
+	"init-workspace.cmake-qt.title": "初始化工作空间为 cmake-qt",
+	"init-workspace.vscode-extension.title": "初始化工作空间为 vscode extenstion"
+}

@@ -1,0 +1,487 @@
+{
+	"name": "ConvYouWant",
+	"publisher": "zinface",
+	"displayName": "YouWantWorkSpace",
+	"description": "Initialize your workspace to the type you want",
+	"version": "0.1.0",
+	"engines": {
+		"vscode": "^1.22.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:initNativeWorkspace",
+		"onCommand:initRemoteWorkspace",
+		"onCommand:runAnything",
+		"onCommand:youwantSyncRepo"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"configuration": {
+			"title": "ConvYouWant Configuration",
+			"properties": {
+				"youwant.repo": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"description": "你想引用的youwant.json描述文件地址"
+					},
+					"default": [],
+					"description": "Remote template repository description files"
+				},
+				"youwant.offline.repo.configuration": {
+					"type": "array",
+					"default": [],
+					"description": "Offline template repository describes file configuration items"
+				},
+				"youwant.configuration": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"label": {
+								"type": "string",
+								"description": "设置显示的条目名称"
+							},
+							"detail": {
+								"type": "string",
+								"description": "设置显示的条目说明"
+							},
+							"type": {
+								"type": "string",
+								"description": "设置显示的条目分类"
+							},
+							"template": {
+								"type": "object",
+								"description": "模板动作配置",
+								"properties": {
+									"action": {
+										"type": "string",
+										"default": "git/shell/questions",
+										"description": "动作类型设置(git/shell/questions{questsions/answers})"
+									},
+									"git": {
+										"type": "object",
+										"description": "一个好像没什么作用的配置",
+										"properties": {
+											"url": {
+												"type": "string",
+												"description": "指定一个仓库地址"
+											}
+										}
+									},
+									"shell": {
+										"type": "object",
+										"description": "action被声明为shell动作时执行此部分",
+										"properties": {
+											"delay": {
+												"type": "integer",
+												"default": 0,
+												"description": "shell 命令执行延时设置"
+											},
+											"commands": {
+												"type": [
+													"array"
+												],
+												"description": "此处可配置多项执行命令",
+												"items": {
+													"type": [
+														"object",
+														"string"
+													],
+													"description": "此处可配置执行命令类型(string|object)",
+													"properties": {
+														"command": {
+															"type": "string",
+															"description": "设置执行的程序名称"
+														},
+														"args": {
+															"type": "array",
+															"description": "设置执行的程序所需要的参数",
+															"items": {
+																"type": "string",
+																"description": "参数..."
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									"questions": {
+										"type": "array",
+										"description": "设置问题Q系列和跳跃配置",
+										"items": {
+											"type": "object",
+											"description": "问题Q设置, 必须设置第一个id=a，question,yes,no等属性",
+											"properties": {
+												"id": {
+													"type": "string",
+													"description": "问题Q编号，以a为第一个问题"
+												},
+												"question": {
+													"type": "string",
+													"description": "显示问题Q部分"
+												},
+												"yes": {
+													"type": "string",
+													"description": "跳跃点，可以是下一个问题Q编号或回答A编号"
+												},
+												"no": {
+													"type": "string",
+													"description": "跳跃点，可以是下一个问题Q编号或回答A编号"
+												}
+											}
+										}
+									},
+									"answers": {
+										"type": "array",
+										"description": "设置回答A系列配置",
+										"items": {
+											"type": "object",
+											"description": "回答A配置，非必须设置部分(将由问题Q跳跃到此部分)，必须设置 answer,action{shell/git}",
+											"properties": {
+												"answer": {
+													"type": "string",
+													"description": "由问题Q跳跃联接的回答A动作配置"
+												},
+												"action": {
+													"type": "string",
+													"default": "git/shell",
+													"description": "动作类型设置(git/shell)"
+												},
+												"git": {
+													"type": "object",
+													"description": "一个好像没什么作用的配置",
+													"properties": {
+														"url": {
+															"type": "string",
+															"description": "指定一个仓库地址"
+														}
+													}
+												},
+												"shell": {
+													"type": "object",
+													"description": "action被声明为shell动作时执行此部分",
+													"properties": {
+														"delay": {
+															"type": "integer",
+															"default": 0,
+															"description": "shell 命令执行延时设置"
+														},
+														"commands": {
+															"type": [
+																"array"
+															],
+															"description": "此处可配置多项执行命令",
+															"items": {
+																"type": [
+																	"object",
+																	"string"
+																],
+																"description": "此处可配置执行命令类型(string|object)",
+																"properties": {
+																	"command": {
+																		"type": "string",
+																		"description": "设置执行的程序名称"
+																	},
+																	"args": {
+																		"type": "array",
+																		"description": "设置执行的程序所需要的参数",
+																		"items": {
+																			"type": "string",
+																			"description": "参数..."
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									"commands": {
+										"type": "array",
+										"description": "动作完成时触发的vscode内部执行指令"
+									}
+								}
+							}
+						}
+					},
+					"default": [
+						{
+							"label": "open bing.com",
+							"detail": "打开 www.bing.com",
+							"type": "www",
+							"template": {
+								"action": "shell",
+								"shell": {
+									"commands": [
+										"xdg-open https://www.bing.com"
+									]
+								},
+								"command": "workbench.files.action.refreshFilesExplorer"
+							}
+						}
+					],
+					"description": "Local template repository descriptions"
+				},
+				"youwant.custome.configuration": {
+					"type": "array",
+					"default": [],
+					"description": "Custome template repository descriptions",
+					"items": {
+						"type": "object",
+						"properties": {
+							"label": {
+								"type": "string",
+								"description": "设置显示的条目名称"
+							},
+							"detail": {
+								"type": "string",
+								"description": "设置显示的条目说明"
+							},
+							"type": {
+								"type": "string",
+								"description": "设置显示的条目分类"
+							},
+							"template": {
+								"type": "object",
+								"description": "模板动作配置",
+								"properties": {
+									"action": {
+										"type": "string",
+										"default": "git/shell/questions",
+										"description": "动作类型设置(git/shell/questions{questsions/answers})"
+									},
+									"git": {
+										"type": "object",
+										"description": "一个好像没什么作用的配置",
+										"properties": {
+											"url": {
+												"type": "string",
+												"description": "指定一个仓库地址"
+											}
+										}
+									},
+									"shell": {
+										"type": "object",
+										"description": "action被声明为shell动作时执行此部分",
+										"properties": {
+											"delay": {
+												"type": "integer",
+												"default": 0,
+												"description": "shell 命令执行延时设置"
+											},
+											"commands": {
+												"type": [
+													"array"
+												],
+												"description": "此处可配置多项执行命令",
+												"items": {
+													"type": [
+														"object",
+														"string"
+													],
+													"description": "此处可配置执行命令类型(string|object)",
+													"properties": {
+														"command": {
+															"type": "string",
+															"description": "设置执行的程序名称"
+														},
+														"args": {
+															"type": "array",
+															"description": "设置执行的程序所需要的参数",
+															"items": {
+																"type": "string",
+																"description": "参数..."
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									"questions": {
+										"type": "array",
+										"description": "设置问题Q系列和跳跃配置",
+										"items": {
+											"type": "object",
+											"description": "问题Q设置, 必须设置第一个id=a，question,yes,no等属性",
+											"properties": {
+												"id": {
+													"type": "string",
+													"description": "问题Q编号，以a为第一个问题"
+												},
+												"question": {
+													"type": "string",
+													"description": "显示问题Q部分"
+												},
+												"yes": {
+													"type": "string",
+													"description": "跳跃点，可以是下一个问题Q编号或回答A编号"
+												},
+												"no": {
+													"type": "string",
+													"description": "跳跃点，可以是下一个问题Q编号或回答A编号"
+												}
+											}
+										}
+									},
+									"answers": {
+										"type": "array",
+										"description": "设置回答A系列配置",
+										"items": {
+											"type": "object",
+											"description": "回答A配置，非必须设置部分(将由问题Q跳跃到此部分)，必须设置 answer,action{shell/git}",
+											"properties": {
+												"answer": {
+													"type": "string",
+													"description": "由问题Q跳跃联接的回答A动作配置"
+												},
+												"action": {
+													"type": "string",
+													"default": "git/shell",
+													"description": "动作类型设置(git/shell)"
+												},
+												"git": {
+													"type": "object",
+													"description": "一个好像没什么作用的配置",
+													"properties": {
+														"url": {
+															"type": "string",
+															"description": "指定一个仓库地址"
+														}
+													}
+												},
+												"shell": {
+													"type": "object",
+													"description": "action被声明为shell动作时执行此部分",
+													"properties": {
+														"delay": {
+															"type": "integer",
+															"default": 0,
+															"description": "shell 命令执行延时设置"
+														},
+														"commands": {
+															"type": [
+																"array"
+															],
+															"description": "此处可配置多项执行命令",
+															"items": {
+																"type": [
+																	"object",
+																	"string"
+																],
+																"description": "此处可配置执行命令类型(string|object)",
+																"properties": {
+																	"command": {
+																		"type": "string",
+																		"description": "设置执行的程序名称"
+																	},
+																	"args": {
+																		"type": "array",
+																		"description": "设置执行的程序所需要的参数",
+																		"items": {
+																			"type": "string",
+																			"description": "参数..."
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									"commands": {
+										"type": "array",
+										"description": "动作完成时触发的vscode内部执行指令"
+									}
+								}
+							}
+						}
+					}
+				},
+				"youwant.runAnything": {
+					"type": "object",
+					"description": "任意时刻的执行, 你所想执行的内容或下一个处理节点"
+				}
+			}
+		},
+		"commands": [
+			{
+				"command": "initNativeWorkspace",
+				"title": "初始化工作空间(本地模板)",
+				"category": "ConvWorkSpace"
+			},
+			{
+				"command": "initRemoteWorkspace",
+				"title": "初始化远程工作空间(远程模板)",
+				"category": "ConvWorkSpace"
+			},
+			{
+				"command": "runAnything",
+				"title": "运行你想要运行的",
+				"category": "运行: RunAnything"
+			},
+			{
+				"command": "youwantSyncRepo",
+				"title": "同步远程仓库描述配置",
+				"category": "同步: YouwantSyncRepo",
+				"icon": "$(sync)"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "initNativeWorkspace",
+					"group": "ConvWorkSpace",
+					"when": "explorerResourceIsRoot"
+				},
+				{
+					"command": "initRemoteWorkspace",
+					"group": "ConvWorkSpace",
+					"when": "explorerResourceIsRoot"
+				}
+			]
+		}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zinface/vscode-youwant-workspace.git"
+	},
+	"author": {
+		"name": "zinface",
+		"email": "zinfacex@gmail.com"
+	},
+	"icon": "assets/icon.jpeg",
+	"license": "",
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.4",
+		"@types/mocha": "^9.0.0",
+		"@types/node": "^14.18.0",
+		"@types/vscode": "^1.22.0",
+		"@typescript-eslint/eslint-plugin": "^5.1.0",
+		"@typescript-eslint/parser": "^5.1.0",
+		"@vscode/test-electron": "^1.6.2",
+		"eslint": "^8.1.0",
+		"glob": "^7.1.7",
+		"mocha": "^9.2.1",
+		"typescript": "^4.4.4"
+	},
+	"dependencies": {
+		"axios": "^0.24.0"
+	}
+}
